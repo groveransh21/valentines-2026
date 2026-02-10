@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Will You Be My Valentine? 💖</title>
+
+  <!-- Typical typewriter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 25px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      max-width: 420px;
+      animation: fadeIn 1.5s ease;
+      position: relative;
+      z-index: 2; /* above petals */
+    }
+
+    img {
+      width: 220px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    h1 {
+      color: #ff4d6d;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    /* Letter panel (burnt paper style) */
+    .letter {
+      display: none;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.6s ease;
+      margin-top: 20px;
+      text-align: left;
+
+      background: #fff7e6;
+      padding: 22px 18px;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.18);
+    }
+
+    /* Burnt paper edges */
+    .letter::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(28px 18px at 8% 10%, rgba(70,35,15,0.45) 0%, rgba(70,35,15,0.0) 70%),
+        radial-gradient(34px 22px at 92% 14%, rgba(70,35,15,0.45) 0%, rgba(70,35,15,0.0) 70%),
+        radial-gradient(36px 24px at 10% 90%, rgba(70,35,15,0.48) 0%, rgba(70,35,15,0.0) 72%),
+        radial-gradient(30px 20px at 90% 88%, rgba(70,35,15,0.48) 0%, rgba(70,35,15,0.0) 72%),
+        radial-gradient(closest-side, rgba(80,35,15,0.38), rgba(0,0,0,0.0) 70%) 0 0 / 100% 100% no-repeat,
+        linear-gradient(to right, rgba(80,35,15,0.55), rgba(0,0,0,0) 14%, rgba(0,0,0,0) 86%, rgba(80,35,15,0.55)),
+        linear-gradient(to bottom, rgba(80,35,15,0.55), rgba(0,0,0,0) 16%, rgba(0,0,0,0) 84%, rgba(80,35,15,0.55));
+      mix-blend-mode: multiply;
+      opacity: 0.9;
+      filter: blur(0.2px);
+    }
+
+    /* Subtle paper grain / vignette */
+    .letter::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      pointer-events: none;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.55), rgba(0,0,0,0) 45%),
+        radial-gradient(circle at 80% 60%, rgba(0,0,0,0.06), rgba(0,0,0,0) 55%),
+        repeating-linear-gradient(
+          0deg,
+          rgba(0,0,0,0.015),
+          rgba(0,0,0,0.015) 1px,
+          rgba(255,255,255,0.00) 2px,
+          rgba(255,255,255,0.00) 4px
+        );
+      opacity: 0.55;
+    }
+
+    /* Typed letter text */
+    #typedLetter {
+      position: relative;
+      z-index: 2;
+      font-family: "Special Elite", monospace;
+      font-size: 16px;   /* reduced */
+      line-height: 1.6;
+      letter-spacing: 1px;
+      color: #2f2f2f;
+      white-space: pre-wrap;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      margin-left: 2px;
+      color: #ff4d6d;
+      font-weight: 600;
+      animation: blink 0.8s infinite;
+      transform: translateY(2px);
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #readBtn {
+      background: #ff4d6d;
+      color: white;
+      margin-top: 10px;
+    }
+
+    #yesBtn {
+      background: #ff4d6d;
+      color: white;
+      margin-right: 10px;
+      display: none;
+    }
+
+    #noBtn {
+      background: #ddd;
+      position: absolute;
+      display: none;
+    }
+
+    #yesBtn:hover,
+    #readBtn:hover {
+      transform: scale(1.06);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    /* Rose petals layer */
+    #petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .petal {
+      position: absolute;
+      top: -10vh;
+      width: 18px;
+      height: 18px;
+      opacity: 0.9;
+      background: radial-gradient(circle at 30% 30%, #ffd1dc 0%, #ff4d6d 55%, #c9184a 100%);
+      border-radius: 70% 30% 70% 30%;
+      transform: rotate(15deg);
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
+      animation-name: fall, sway, spin;
+      animation-timing-function: linear, ease-in-out, linear;
+      animation-iteration-count: infinite, infinite, infinite;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(120vh) rotate(15deg); }
+    }
+    @keyframes sway {
+      0%, 100% { margin-left: 0; }
+      50% { margin-left: 60px; }
+    }
+    @keyframes spin {
+      to { rotate: 360deg; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Rose petals container -->
+  <div id="petals"></div>
+
+  <!-- Background music (does NOT autoplay; starts on click with fade-in) -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card">
+    <!-- Make sure IMG_6278.jpg is in the same folder as this HTML -->
+    <img src="IMG_6278.jpg" alt="Her Photo">
+
+    <h1>Hey Sanah ❤️</h1>
+    <p>So...I wanted to do this properly</p>
+
+    <button id="readBtn">Read my letter 💌</button>
+
+    <!-- Burnt paper letter with typewriter text -->
+    <div class="letter" id="letter">
+      <div id="typedLetter"></div>
+    </div>
+
+    <div id="buttons">
+      <button id="yesBtn">Yes 💕</button>
+      <button id="noBtn">No 😢</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Elements ---
+    const readBtn = document.getElementById("readBtn");
+    const letter = document.getElementById("letter");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const bgMusic = document.getElementById("bgMusic");
+    const typedLetter = document.getElementById("typedLetter");
+    let petalsRoot = document.getElementById("petals");
+
+    // --- Petals helpers ---
+    function rand(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function startPetals(count = 18) {
+      if (!petalsRoot) return;
+
+      petalsRoot.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement("span");
+        p.className = "petal";
+
+        const left = rand(0, 100);
+        const size = rand(10, 22);
+        const fallDur = rand(6, 12);
+        const swayDur = rand(2.5, 5);
+        const spinDur = rand(3, 7);
+        const delay = rand(0, 6);
+        const opacity = rand(0.55, 0.95);
+
+        p.style.left = `${left}vw`;
+        p.style.width = `${size}px`;
+        p.style.height = `${size}px`;
+        p.style.opacity = opacity;
+
+        p.style.animationDuration = `${fallDur}s, ${swayDur}s, ${spinDur}s`;
+        p.style.animationDelay = `${delay}s, ${rand(0, 2)}s, ${rand(0, 2)}s`;
+
+        petalsRoot.appendChild(p);
+      }
+    }
+
+    // Gentle petals from the start
+    startPetals(12);
+
+    // --- Typewriter ---
+    function typeWriter(el, text, speedMs = 45) {
+      return new Promise((resolve) => {
+        el.innerHTML = "";
+
+        const cursor = document.createElement("span");
+        cursor.className = "cursor";
+        cursor.textContent = "|";
+
+        let i = 0;
+        const timer = setInterval(() => {
+          cursor.insertAdjacentText("beforebegin", text[i]);
+          i++;
+
+          if (i >= text.length) {
+            clearInterval(timer);
+            resolve();
+          }
+        }, speedMs);
+
+        el.appendChild(cursor);
+      });
+    }
+
+    // --- Audio fade in ---
+    function fadeInAudio(audio, duration = 4000, targetVolume = 0.45) {
+      audio.volume = 0;
+      const playPromise = audio.play();
+      if (playPromise && playPromise.catch) playPromise.catch(() => {});
+
+      const step = 0.05;
+      const intervalTime = duration * step; // e.g., 4000*0.05=200ms
+      const fade = setInterval(() => {
+        if (audio.volume < targetVolume) {
+          audio.volume = Math.min(audio.volume + step, targetVolume);
+        } else {
+          clearInterval(fade);
+        }
+      }, intervalTime);
+    }
+
+    const letterText =
+`From the moment you entered my life, everything feels a little warmer and a little more magical.
+You make ordinary days special by being you.
+Be it your OHOS or Relax Now or smile or eyes, I fell hard for all of them.
+
+And that’s why I want you to know that you're a gem of a person for me.
+
+Will you be my Valentine? ❤️`;
+
+    // --- Read letter: reveal + fade-in audio + typewriter ---
+    readBtn.addEventListener("click", async () => {
+      letter.style.display = "block";
+      setTimeout(() => {
+        letter.style.opacity = "1";
+        letter.style.transform = "translateY(0)";
+      }, 50);
+
+      readBtn.style.display = "none";
+
+      // More petals
+      startPetals(22);
+
+      // Start music only now (no sound on first page) + fade in
+      fadeInAudio(bgMusic, 4000, 0.45);
+
+      // Type then reveal buttons
+      await typeWriter(typedLetter, letterText, 45);
+      yesBtn.style.display = "inline-block";
+      noBtn.style.display = "inline-block";
+    });
+
+    // --- No button runs away ---
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - 100);
+      const y = Math.random() * (window.innerHeight - 50);
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    });
+
+    // --- Yes: finale + petals burst (music continues) ---
+    yesBtn.addEventListener("click", () => {
+      const card = document.querySelector(".card");
+
+      card.innerHTML = `
+        <h1 style="font-size:3rem; color:#ff4d6d; margin-bottom: 10px;">
+          Knew you'd reach here sooner or later 
+        </h1>
+        <p style="font-size:1.4rem; max-width:400px; margin: 0;">
+          I can't wait to spend Valentine's with you <br/>
+          Enjoy the song Panda :)
+        </p>
+      `;
+
+      bgMusic.volume = 0.8;
+      startPetals(69);
+    });
+  </script>
+
+</body>
+</html>
