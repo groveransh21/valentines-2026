@@ -11,15 +11,25 @@
 
   <style>
     body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "Segoe UI", sans-serif;
-      overflow: hidden;
-    }
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Background photo layer */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("IMG_6278.jpg") center/cover no-repeat;
+  filter: grayscale(100%) brightness(0.5) blur(4px);
+  z-index: -1;
+}
 
     .card {
       background: white;
